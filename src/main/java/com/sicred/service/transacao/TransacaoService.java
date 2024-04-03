@@ -29,7 +29,7 @@ public class TransacaoService  {
     @Autowired
     DescricaoRepository descricaoRepository;
 
-    @PostMapping("/autorizar")
+        @PostMapping("/autorizar")
     public @ResponseBody ResponseEntity<Transacao> autorizar(@RequestBody @Valid  Transacao transacao) {
 
         if (transacaoRepository.findById(transacao.getId()).isPresent()) {
@@ -51,17 +51,14 @@ public class TransacaoService  {
 
     @PutMapping("/estornar")
     public @ResponseBody ResponseEntity<Transacao> estornar(@RequestBody @Valid Transacao transacao) {
+        if (transacaoRepository.findById(transacao.getId()).isEmpty()) {
+            throw new ToolsChallengeException("Transação inexistente", "Transação não existe na base de dados ");
+        }
         transacao.getDescricao().setStatus(StatusTrancacao.CANCELADO);
         descricaoRepository.save(transacao.getDescricao());
         return ResponseEntity.ok(transacao);
 
     }
 
-    @GetMapping
-    public @ResponseBody ResponseEntity<String> estornar() {
-
-        return ResponseEntity.ok("cabaço");
-
-    }
 
 }
