@@ -3,12 +3,13 @@ package com.toolsjavachallenge.service;
 import com.toolsjavachallenge.dto.request.FormaPagamentoRequestDTO;
 import com.toolsjavachallenge.dto.request.PagamentoRequestDTO;
 import com.toolsjavachallenge.dto.request.TransacaoRequestDTO;
-import com.toolsjavachallenge.dto.request.enums.StatusRequest;
 import com.toolsjavachallenge.dto.request.enums.TipoPagamentoRequest;
 import com.toolsjavachallenge.dto.response.DescricaoResponseDTO;
+import com.toolsjavachallenge.dto.response.FormaPagamentoResponseDTO;
 import com.toolsjavachallenge.dto.response.PagamentoResponseDTO;
 import com.toolsjavachallenge.dto.response.TransacaoResponseDTO;
 import com.toolsjavachallenge.dto.response.enums.StatusResponse;
+import com.toolsjavachallenge.dto.response.enums.TipoPagamentoResponse;
 import com.toolsjavachallenge.entity.Descricao;
 import com.toolsjavachallenge.entity.FormaPagamento;
 import com.toolsjavachallenge.entity.Transacao;
@@ -45,12 +46,12 @@ public class PagamentoService {
             throw new ValidacaoPagamentoException("Transação com ID " + transacao.getId() + " já existe.");
         }
 
-        if (transacao.getDescricao().getNsu() != null || !transacao.getDescricao().getNsu().toString().isEmpty()) {
-            new ValidacaoPagamentoException("Não e permetido informa NSU ao criar um novo pagamento");
+        if (transacao.getDescricao().getNsu() != null && !transacao.getDescricao().getNsu().toString().isEmpty()) {
+            throw new ValidacaoPagamentoException("Não e permetido informa NSU ao criar um novo pagamento");
         }
-        if (transacao.getDescricao().getCodigoAutorizacao() != null ||
+        if (transacao.getDescricao().getCodigoAutorizacao() != null &&
                 !transacao.getDescricao().getCodigoAutorizacao().toString().isEmpty()) {
-            new ValidacaoPagamentoException("Não e permetido informa  ao criar um novo pagamento");
+            throw new ValidacaoPagamentoException("Não e permetido informa  ao criar um novo pagamento");
         }
 
         ProcessadorPagamentoRN processador = processadores.stream()
@@ -82,7 +83,32 @@ public class PagamentoService {
                 .id(transacaoEntity.getId())
                 .cartao(transacaoEntity.getCartao())
                 .descricao(getDescricaoResponse(transacaoEntity.getDescricao()))
+                .formaPagamento(getFormaPagamentoResponse(transacaoEntity.getFormaPagamento()))
                 .build();
+    }
+
+    private FormaPagamentoResponseDTO getFormaPagamentoResponse(FormaPagamento formaPagamento) {
+        return FormaPagamentoResponseDTO.builder()
+                .parcelas(formaPagamento.getParcelas())
+                .tipo(getTipoPagamentoResponse(formaPagamento.getTipoPagamento()))
+                .build();
+    }
+
+    private TipoPagamentoResponse getTipoPagamentoResponse(TipoPagamento tipoPagamento) {
+        switch (tipoPagamento) {
+
+            case PARCELADO_LOJA -> {
+                return TipoPagamentoResponse.PARCELADO_LOJA;
+            }
+
+            case PARCELADO_EMISSOR -> {
+                return TipoPagamentoResponse.PARCELADO_EMISSOR;
+            }
+
+            default ->  {
+                return TipoPagamentoResponse.AVISTA;
+            }
+        }
     }
 
     private DescricaoResponseDTO getDescricaoResponse(Descricao descricao) {
@@ -112,7 +138,7 @@ public class PagamentoService {
 
     private FormaPagamento getFormaPagamento(FormaPagamentoRequestDTO formaPagamento) {
         return FormaPagamento.builder()
-                .parcelas(formaPagamento.getParcela())
+                .parcelas(formaPagamento.getParcelas())
                 .tipoPagamento(getTipoPagamento(formaPagamento.getTipo()))
                 .build();
     }

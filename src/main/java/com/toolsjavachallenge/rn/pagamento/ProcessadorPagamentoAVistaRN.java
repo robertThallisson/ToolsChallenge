@@ -3,7 +3,9 @@ package com.toolsjavachallenge.rn.pagamento;
 import com.toolsjavachallenge.dto.request.TransacaoRequestDTO;
 import com.toolsjavachallenge.dto.request.enums.TipoPagamentoRequest;
 import com.toolsjavachallenge.exception.ValidacaoPagamentoException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProcessadorPagamentoAVistaRN implements ProcessadorPagamentoRN{
     private final Integer NUMERO_MAXIMO_PARCELA_AVISTA = 1;
 
@@ -14,7 +16,7 @@ public class ProcessadorPagamentoAVistaRN implements ProcessadorPagamentoRN{
 
     @Override
     public void processar(TransacaoRequestDTO transacao) {
-        if (NUMERO_MAXIMO_PARCELA_AVISTA.equals(transacao.getFormaPagamento().getParcela())) {
+        if (!NUMERO_MAXIMO_PARCELA_AVISTA.equals(transacao.getFormaPagamento().getParcelas())) {
             throw new ValidacaoPagamentoException("Pagamento à vista deve ter apenas 1 parcela.");
         }
     }

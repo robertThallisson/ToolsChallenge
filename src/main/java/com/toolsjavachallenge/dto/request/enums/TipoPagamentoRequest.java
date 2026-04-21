@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum TipoPagamentoRequest {
 
-    AVISTA("VISTA"),
+    AVISTA("AVISTA"),
     PARCELADO_LOJA("PARCELADO_LOJA"),
     PARCELADO_EMISSOR("PARCELADO_EMISSOR");
 

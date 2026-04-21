@@ -34,7 +34,7 @@ public class PagamentoCtrl {
     }
 
     @GetMapping("/{id}/estorno")
-    @Tag(name = "Estornar pagamentos", description = "Permiter estorna um pagamento ja existene")
+    @Tag(name = "Estornar pagamentos", description = "Permiter estorna um pagamento ja existene com base no id fornecido")
     public ResponseEntity<PagamentoResponseDTO> estornar(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.estornarPagamento(id));
     }

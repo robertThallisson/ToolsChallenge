@@ -13,7 +13,7 @@ public class TransacaoRequestDTO {
     @NotBlank(message = "Cartão é obrigatório")
     private String cartao;
 
-    @NotBlank(message = "ID da transação é obrigatório")
+    @NotNull(message = "ID da transação é obrigatório")
     private Long id;
 
     @NotNull(message = "Descrição é obrigatória")

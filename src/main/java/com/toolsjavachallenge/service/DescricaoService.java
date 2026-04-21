@@ -1,6 +1,7 @@
 package com.toolsjavachallenge.service;
 
 import com.toolsjavachallenge.dto.request.DescricaoRequestDTO;
+import com.toolsjavachallenge.dto.request.enums.StatusRequest;
 import com.toolsjavachallenge.entity.Descricao;
 import com.toolsjavachallenge.entity.enums.Status;
 import com.toolsjavachallenge.exception.ValidacaoPagamentoException;
@@ -25,9 +26,10 @@ public class DescricaoService {
         descricao.setCodigoAutorizacao(gerarCodigoAutorizacao());
         descricao.setValor(payload.getValor()) ;
         descricao.setEstabelecimento(payload.getEstabelecimento());
-        descricao.setDataHora(descricao.getDataHora());
-
+        descricao.setDataHora(payload.getDataHora());
+        descricao.setStatus(Status.AUTORIZADO);
         return descricaoRepository.save(descricao);
+
     }
 
     public void estornarDescricao(Long nsu) {

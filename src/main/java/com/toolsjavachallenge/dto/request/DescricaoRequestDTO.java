@@ -10,26 +10,31 @@ import com.toolsjavachallenge.dto.request.enums.StatusRequest;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DescricaoRequestDTO {
 
 
     private Long nsu;
 
-    @NotBlank(message = "Valor é obrigatório")
+    @NotNull(message = "Valor é obrigatório")
     private BigDecimal valor;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    @NotBlank(message = "Data e Hora são obrigatórios")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    @NotNull(message = "Data e Hora são obrigatórios")
     private LocalDateTime dataHora;
 
     @NotBlank(message = "Estabelecimento é obrigatório")
